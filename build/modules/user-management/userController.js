@@ -17,6 +17,9 @@ var _utils = _interopRequireDefault(require("../../utils/utils"));
 
 var _userService = _interopRequireDefault(require("./userService"));
 
+/* eslint-disable no-tabs */
+
+/* eslint-disable no-mixed-spaces-and-tabs */
 var util = new _utils["default"]();
 
 var UserController =
@@ -49,23 +52,73 @@ function () {
               _context.t0 = _context["catch"](1);
               errorMessage = '';
 
+              if (_context.t0.errors.email) {
+                errorMessage = _context.t0.errors.email.message;
+              }
+
+              if (_context.t0.errors.email && _context.t0.errors.email.kind === 'unique') {
+                errorMessage = _context.t0.errors.email.message;
+              }
+
+              if (_context.t0.errors.email && _context.t0.errors.email.kind === 'required') {
+                errorMessage = _context.t0.errors.email.message;
+              }
+
               if (_context.t0.errors.password) {
                 errorMessage = _context.t0.errors.password.message;
-              } else if (_context.t0.errors.email) {
-                errorMessage = _context.t0.errors.email.message;
-              } else if (_context.t0.errors.username) {
+              }
+
+              if (_context.t0.errors.username && _context.t0.errors.username.kind === 'unique') {
+                errorMessage = _context.t0.errors.username.message;
+              }
+
+              if (_context.t0.errors.username && _context.t0.errors.username.kind === 'required') {
                 errorMessage = _context.t0.errors.username.message;
               }
 
               util.setError(400, errorMessage);
               return _context.abrupt("return", util.send(res));
 
-            case 15:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
       }, null, null, [[1, 9]]);
+    }
+  }, {
+    key: "loginUser",
+    value: function loginUser(req, res) {
+      var loginInfo, user;
+      return _regenerator["default"].async(function loginUser$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              loginInfo = req.body;
+              _context2.next = 3;
+              return _regenerator["default"].awrap(_userService["default"].loginUser(loginInfo));
+
+            case 3:
+              user = _context2.sent;
+
+              if (!user.error) {
+                _context2.next = 7;
+                break;
+              }
+
+              util.setError(400, user.error);
+              return _context2.abrupt("return", util.send(res));
+
+            case 7:
+              util.setSuccess(200, 'Logged in successfully!', user);
+              return _context2.abrupt("return", util.send(res));
+
+            case 9:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      });
     }
   }]);
   return UserController;

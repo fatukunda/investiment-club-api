@@ -65,6 +65,58 @@ function () {
         }
       }, null, null, [[0, 10]]);
     }
+    /**
+       * @param  {object} loginInfo
+       * @returns {Promise}
+       * @description Takes in username and password and returns a user and the auth token.
+       */
+
+  }, {
+    key: "loginUser",
+    value: function loginUser(loginInfo) {
+      var username, password, user, token;
+      return _regenerator["default"].async(function loginUser$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              username = loginInfo.username, password = loginInfo.password;
+              _context2.prev = 1;
+              _context2.next = 4;
+              return _regenerator["default"].awrap(_User["default"].findByCredentials(username, password));
+
+            case 4:
+              user = _context2.sent;
+
+              if (!user.error) {
+                _context2.next = 7;
+                break;
+              }
+
+              return _context2.abrupt("return", user);
+
+            case 7:
+              _context2.next = 9;
+              return _regenerator["default"].awrap(user.generateAuthToken());
+
+            case 9:
+              token = _context2.sent;
+              return _context2.abrupt("return", {
+                user: user,
+                token: token
+              });
+
+            case 13:
+              _context2.prev = 13;
+              _context2.t0 = _context2["catch"](1);
+              throw _context2.t0;
+
+            case 16:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, null, null, [[1, 13]]);
+    }
   }]);
   return UserService;
 }();

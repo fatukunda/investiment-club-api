@@ -6,6 +6,12 @@ export const validUser = {
   password: 'test12!@',
 };
 
+export const existingUserName = {
+  username: 'testUser',
+  email: 'testuser1@app.com',
+  password: 'test12!@',
+};
+
 // User with no username
 
 export const noUsernameUser = {
@@ -44,7 +50,7 @@ export const shortPasswordUser = {
 };
 
 // Sample users
-const user1 = {
+export const user1 = {
   username: 'user1',
   email: 'user1@app.com',
   password: 'testuser1!@',

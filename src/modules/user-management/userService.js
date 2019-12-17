@@ -17,6 +17,25 @@ class UserService {
       throw error;
     }
   }
+
+  /**
+     * @param  {object} loginInfo
+     * @returns {Promise}
+     * @description Takes in username and password and returns a user and the auth token.
+     */
+  static async loginUser(loginInfo) {
+    const { username, password } = loginInfo;
+    try {
+      const user = await User.findByCredentials(username, password);
+      if (user.error) {
+        return user;
+      }
+      const token = await user.generateAuthToken();
+      return { user, token };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default UserService;
