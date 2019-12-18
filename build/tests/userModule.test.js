@@ -126,5 +126,39 @@ describe('Testing the User management module', function () {
       done();
     });
   });
+  it('Should view user profile', function (done) {
+    var token = (0, _testData.generateToken)();
+    var username = _testData.user1.username,
+        email = _testData.user1.email;
+
+    _chai["default"].request(_app["default"]).get("".concat(usersUrl, "/me")).set('Authorization', "Bearer ".concat(token)).send().end(function (err, res) {
+      expect(res.status).to.equal(200);
+      expect(res.body.data).to.include({
+        username: username,
+        email: email
+      });
+      done();
+    });
+  });
+  it('Should throw a 401 if authorization header is not given', function (done) {
+    _chai["default"].request(_app["default"]).get("".concat(usersUrl, "/me")).send().end(function (err, res) {
+      expect(res.status).to.equal(401);
+      expect(res.body).to.include({
+        status: 'error',
+        message: 'Authorization header is required.'
+      });
+      done();
+    });
+  });
+  it('Should throw a 401 if an invalid token was provided', function (done) {
+    _chai["default"].request(_app["default"]).get("".concat(usersUrl, "/me")).set('Authorization', "Bearer ".concat(_testData.invalidToken)).send().end(function (err, res) {
+      expect(res.status).to.equal(401);
+      expect(res.body).to.include({
+        status: 'error',
+        message: 'Authentication failed.'
+      });
+      done();
+    });
+  });
 });
 //# sourceMappingURL=userModule.test.js.map

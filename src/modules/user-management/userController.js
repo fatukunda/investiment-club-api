@@ -48,4 +48,10 @@ export default class UserController {
     util.setSuccess(200, 'Logged in successfully!', user);
     return util.send(res);
   }
+
+  static async viewUserProfile(req, res) {
+    const user = await req.user;
+    util.setSuccess(200, 'User Profile', user);
+    return util.send(res);
+  }
 }

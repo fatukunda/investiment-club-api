@@ -5,13 +5,20 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createUsers = exports.user1 = exports.shortPasswordUser = exports.invalidEmailUser = exports.noEmailUser = exports.noPasswordUser = exports.noUsernameUser = exports.existingUserName = exports.validUser = void 0;
+exports.invalidToken = exports.generateToken = exports.createUsers = exports.user1 = exports.shortPasswordUser = exports.invalidEmailUser = exports.noEmailUser = exports.noPasswordUser = exports.noUsernameUser = exports.existingUserName = exports.validUser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _mongoose = _interopRequireDefault(require("mongoose"));
+
+var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
+
 var _User = _interopRequireDefault(require("../modules/user-management/User"));
 
-// Valid User
+// eslint-disable-next-line no-underscore-dangle
+var _id = _mongoose["default"].Types.ObjectId(); // Valid User
+
+
 var validUser = {
   username: 'testUser',
   email: 'testuser@app.com',
@@ -58,6 +65,7 @@ var shortPasswordUser = {
 
 exports.shortPasswordUser = shortPasswordUser;
 var user1 = {
+  _id: _id,
   username: 'user1',
   email: 'user1@app.com',
   password: 'testuser1!@'
@@ -94,4 +102,18 @@ var createUsers = function createUsers() {
 };
 
 exports.createUsers = createUsers;
+
+var generateToken = function generateToken() {
+  var token = _jsonwebtoken["default"].sign({
+    _id: _id
+  }, process.env.JWT_KEY, {
+    expiresIn: '1h'
+  });
+
+  return token;
+};
+
+exports.generateToken = generateToken;
+var invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGY5Y2NmODM3MDFhODUwOGM2NzZhZGYiLCJpYXQiOjE1NzY2NTg1NTcsImV4cCI6MTU3NjY2MjE1N30.Wz6xtyN9B6gXr_Y2VgbWUVOZrAljoy4V2ewhZrWXSUB';
+exports.invalidToken = invalidToken;
 //# sourceMappingURL=testData.js.map

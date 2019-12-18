@@ -120,6 +120,29 @@ function () {
         }
       });
     }
+  }, {
+    key: "viewUserProfile",
+    value: function viewUserProfile(req, res) {
+      var user;
+      return _regenerator["default"].async(function viewUserProfile$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return _regenerator["default"].awrap(req.user);
+
+            case 2:
+              user = _context3.sent;
+              util.setSuccess(200, 'User Profile', user);
+              return _context3.abrupt("return", util.send(res));
+
+            case 5:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      });
+    }
   }]);
   return UserController;
 }();
