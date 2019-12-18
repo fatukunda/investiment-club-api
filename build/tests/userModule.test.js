@@ -35,6 +35,12 @@ describe('Testing the User management module', function () {
       done();
     });
   });
+  it('Should throw a 400 if a username already exists', function (done) {
+    _chai["default"].request(_app["default"]).post(usersUrl).set('Accept', 'application/json').send(_testData.user1).end(function (err, res) {
+      expect(res.status).to.equal(400);
+      done();
+    });
+  });
   it('Should throw a 400 if email is not provided', function (done) {
     _chai["default"].request(_app["default"]).post(usersUrl).set('Accept', 'application/json').send(_testData.noEmailUser).end(function (err, res) {
       expect(res.status).to.equal(400);
@@ -67,6 +73,56 @@ describe('Testing the User management module', function () {
     _chai["default"].request(_app["default"]).post(usersUrl).set('Accept', 'application/json').send(_testData.shortPasswordUser).end(function (err, res) {
       expect(res.status).to.equal(400);
       expect(res.body.message).to.equal('Password should have more than 6 characters.');
+      done();
+    });
+  });
+  it('Should login a user', function (done) {
+    var username = _testData.user1.username,
+        password = _testData.user1.password,
+        email = _testData.user1.email;
+    var loginInfo = {
+      username: username,
+      password: password
+    };
+
+    _chai["default"].request(_app["default"]).post("".concat(usersUrl, "/login")).set('Accept', 'application/json').send(loginInfo).end(function (err, res) {
+      expect(res.status).to.equal(200);
+      expect(res.body.data.user).to.include({
+        username: username,
+        email: email
+      });
+      done();
+    });
+  });
+  it('Should throw a 400 if invalid username is provided', function (done) {
+    var password = _testData.user1.password;
+    var loginInfo = {
+      username: 'nouser',
+      password: password
+    };
+
+    _chai["default"].request(_app["default"]).post("".concat(usersUrl, "/login")).set('Accept', 'application/json').send(loginInfo).end(function (err, res) {
+      expect(res.status).to.equal(400);
+      expect(res.body).to.include({
+        status: 'error',
+        message: 'Invalid login credentials.'
+      });
+      done();
+    });
+  });
+  it('Should throw a 400 if invalid password is provided', function (done) {
+    var username = _testData.user1.username;
+    var loginInfo = {
+      username: username,
+      password: 'wrongPass12'
+    };
+
+    _chai["default"].request(_app["default"]).post("".concat(usersUrl, "/login")).set('Accept', 'application/json').send(loginInfo).end(function (err, res) {
+      expect(res.status).to.equal(400);
+      expect(res.body).to.include({
+        status: 'error',
+        message: 'Invalid login credentials.'
+      });
       done();
     });
   });

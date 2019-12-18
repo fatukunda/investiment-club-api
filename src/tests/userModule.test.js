@@ -13,6 +13,7 @@ import {
   invalidEmailUser,
   shortPasswordUser,
   createUsers,
+  user1,
 } from './testData';
 
 const usersUrl = '/api/v1/users';
@@ -29,6 +30,14 @@ describe('Testing the User management module', () => {
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.data.user).to.include({ username, email });
+        done();
+      });
+  });
+
+  it('Should throw a 400 if a username already exists', (done) => {
+    chai.request(app).post(usersUrl).set('Accept', 'application/json').send(user1)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
         done();
       });
   });
@@ -74,6 +83,48 @@ describe('Testing the User management module', () => {
       .end((err, res) => {
         expect(res.status).to.equal(400);
         expect(res.body.message).to.equal('Password should have more than 6 characters.');
+        done();
+      });
+  });
+
+  it('Should login a user', (done) => {
+    const { username, password, email } = user1;
+    const loginInfo = {
+      username,
+      password,
+    };
+    chai.request(app).post(`${usersUrl}/login`).set('Accept', 'application/json').send(loginInfo)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.data.user).to.include({ username, email });
+        done();
+      });
+  });
+
+  it('Should throw a 400 if invalid username is provided', (done) => {
+    const { password } = user1;
+    const loginInfo = {
+      username: 'nouser',
+      password,
+    };
+    chai.request(app).post(`${usersUrl}/login`).set('Accept', 'application/json').send(loginInfo)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body).to.include({ status: 'error', message: 'Invalid login credentials.' });
+        done();
+      });
+  });
+
+  it('Should throw a 400 if invalid password is provided', (done) => {
+    const { username } = user1;
+    const loginInfo = {
+      username,
+      password: 'wrongPass12',
+    };
+    chai.request(app).post(`${usersUrl}/login`).set('Accept', 'application/json').send(loginInfo)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body).to.include({ status: 'error', message: 'Invalid login credentials.' });
         done();
       });
   });

@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createUsers = exports.shortPasswordUser = exports.invalidEmailUser = exports.noEmailUser = exports.noPasswordUser = exports.noUsernameUser = exports.validUser = void 0;
+exports.createUsers = exports.user1 = exports.shortPasswordUser = exports.invalidEmailUser = exports.noEmailUser = exports.noPasswordUser = exports.noUsernameUser = exports.existingUserName = exports.validUser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -16,9 +16,15 @@ var validUser = {
   username: 'testUser',
   email: 'testuser@app.com',
   password: 'test12!@'
+};
+exports.validUser = validUser;
+var existingUserName = {
+  username: 'testUser',
+  email: 'testuser1@app.com',
+  password: 'test12!@'
 }; // User with no username
 
-exports.validUser = validUser;
+exports.existingUserName = existingUserName;
 var noUsernameUser = {
   email: 'testuser@app.com',
   password: 'test12!@'
@@ -56,6 +62,7 @@ var user1 = {
   email: 'user1@app.com',
   password: 'testuser1!@'
 };
+exports.user1 = user1;
 var user2 = {
   username: 'user2',
   email: 'user2@app.com',

@@ -17,6 +17,8 @@ var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
 
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
+var _mongooseUniqueValidator = _interopRequireDefault(require("mongoose-unique-validator"));
+
 /* eslint-disable func-names */
 
 /* eslint-disable no-underscore-dangle */
@@ -43,15 +45,12 @@ var userSchema = _mongoose["default"].Schema({
     required: [true, 'Password is required.'],
     minlength: [6, 'Password should have more than 6 characters.'],
     trim: true
-  },
-  tokens: [{
-    token: {
-      type: String,
-      required: true
-    }
-  }]
+  }
 });
 
+userSchema.plugin(_mongooseUniqueValidator["default"], {
+  message: 'A user with {PATH} {VALUE} already exists.'
+});
 userSchema.pre('save', function _callee(next) {
   var user;
   return _regenerator["default"].async(function _callee$(_context) {
@@ -93,17 +92,16 @@ userSchema.methods.generateAuthToken = function _callee2() {
           user = this;
           token = _jsonwebtoken["default"].sign({
             _id: user._id
-          }, process.env.JWT_KEY);
-          user.tokens = user.tokens.concat({
-            token: token
+          }, process.env.JWT_KEY, {
+            expiresIn: '1h'
           });
-          _context2.next = 5;
+          _context2.next = 4;
           return _regenerator["default"].awrap(user.save());
 
-        case 5:
+        case 4:
           return _context2.abrupt("return", token);
 
-        case 6:
+        case 5:
         case "end":
           return _context2.stop();
       }
@@ -111,7 +109,7 @@ userSchema.methods.generateAuthToken = function _callee2() {
   }, null, this);
 };
 
-userSchema.statics.findByCredentials = function _callee3(email, password) {
+userSchema.statics.findByCredentials = function _callee3(username, password) {
   var user, isPasswordMatch;
   return _regenerator["default"].async(function _callee3$(_context3) {
     while (1) {
@@ -119,8 +117,8 @@ userSchema.statics.findByCredentials = function _callee3(email, password) {
         case 0:
           _context3.next = 2;
           return _regenerator["default"].awrap(User.findOne({
-            email: email
-          }));
+            username: username
+          }).exec());
 
         case 2:
           user = _context3.sent;
@@ -130,8 +128,8 @@ userSchema.statics.findByCredentials = function _callee3(email, password) {
             break;
           }
 
-          throw new Error({
-            error: 'Invalid login credentials'
+          return _context3.abrupt("return", {
+            error: 'Invalid login credentials.'
           });
 
         case 5:
@@ -146,8 +144,8 @@ userSchema.statics.findByCredentials = function _callee3(email, password) {
             break;
           }
 
-          throw new Error({
-            error: 'Invalid login credentials'
+          return _context3.abrupt("return", {
+            error: 'Invalid login credentials.'
           });
 
         case 10:
