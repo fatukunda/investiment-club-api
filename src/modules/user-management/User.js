@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 /* eslint-disable no-underscore-dangle */
 import mongoose from 'mongoose';
-import { isEmail } from 'validator';
+import { isEmail, isAlpha, isMobilePhone } from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import uniqueValidator from 'mongoose-unique-validator';
@@ -30,6 +30,49 @@ const userSchema = mongoose.Schema({
     minlength: [6, 'Password should have more than 6 characters.'],
     trim: true,
   },
+
+  firstName: {
+    type: String,
+    required: false,
+    trim: true,
+    validate: {
+      validator: isAlpha,
+      message: '{PATH} should contain only letters.',
+      isAsync: false,
+    },
+  },
+  lastName: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: isAlpha,
+      message: '{PATH} should contain only letters.',
+      isAsync: false,
+    },
+  },
+  dob: {
+    type: Date,
+  },
+  phoneNumber: {
+    type: String,
+    validate: {
+      validator: isMobilePhone,
+      message: '{VALUE} is not a valid phone number.',
+      isAsync: false,
+      locale: 'en-UG',
+      options: {
+        strictMode: true,
+      },
+    },
+  },
+  address: {
+    type: String,
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female'],
+  },
+
 });
 
 userSchema.plugin(uniqueValidator, { message: 'A user with {PATH} {VALUE} already exists.' });
@@ -63,6 +106,15 @@ userSchema.statics.findByCredentials = async (username, password) => {
     return { error: 'Invalid login credentials.' };
   }
   return user;
+};
+
+userSchema.methods.toJSON = function () {
+  // Remove some sensitive properties from the user response
+  const user = this;
+  const userObject = user.toObject();
+  delete userObject.password;
+
+  return userObject;
 };
 
 const User = mongoose.model('User', userSchema);
