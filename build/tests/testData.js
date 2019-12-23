@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.invalidToken = exports.generateToken = exports.createUsers = exports.user1 = exports.shortPasswordUser = exports.invalidEmailUser = exports.noEmailUser = exports.noPasswordUser = exports.noUsernameUser = exports.existingUserName = exports.validUser = void 0;
+exports.invalidToken = exports.generateToken = exports.createUsers = exports.invalidPhoneNumber = exports.invalidGender = exports.invalidDob = exports.invalidLastName = exports.invalidFirstName = exports.invalidProfileData = exports.userProfileData = exports.user1 = exports.shortPasswordUser = exports.invalidEmailUser = exports.noEmailUser = exports.noPasswordUser = exports.noUsernameUser = exports.existingUserName = exports.validUser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -75,7 +75,57 @@ var user2 = {
   username: 'user2',
   email: 'user2@app.com',
   password: 'testuser2!@'
+};
+var userProfileData = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '02.17.2004',
+  address: 'Ntinda, Kampala',
+  gender: 'male',
+  phoneNumber: '+256716565142'
+};
+exports.userProfileData = userProfileData;
+var invalidProfileData = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '02.17.2004',
+  location: 'Ntinda, Kampala',
+  gender: 'male',
+  phoneNumber: '+256716565142'
+};
+exports.invalidProfileData = invalidProfileData;
+var invalidFirstName = {
+  firstName: 34542525,
+  lastName: 'Doe'
+};
+exports.invalidFirstName = invalidFirstName;
+var invalidLastName = {
+  firstName: 'John',
+  lastName: 456536356
+};
+exports.invalidLastName = invalidLastName;
+var invalidDob = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: 'invalid'
+};
+exports.invalidDob = invalidDob;
+var invalidGender = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '4.4.2000',
+  gender: 'invalid'
+};
+exports.invalidGender = invalidGender;
+var invalidPhoneNumber = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '4.4.2000',
+  gender: 'male',
+  phoneNumber: '8978762565652652625'
 }; // Function to create users for each test
+
+exports.invalidPhoneNumber = invalidPhoneNumber;
 
 var createUsers = function createUsers() {
   return _regenerator["default"].async(function createUsers$(_context) {

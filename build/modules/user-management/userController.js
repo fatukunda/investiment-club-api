@@ -17,6 +17,8 @@ var _utils = _interopRequireDefault(require("../../utils/utils"));
 
 var _userService = _interopRequireDefault(require("./userService"));
 
+var _validator = require("../../utils/validator");
+
 /* eslint-disable no-tabs */
 
 /* eslint-disable no-mixed-spaces-and-tabs */
@@ -50,36 +52,11 @@ function () {
             case 9:
               _context.prev = 9;
               _context.t0 = _context["catch"](1);
-              errorMessage = '';
-
-              if (_context.t0.errors.email) {
-                errorMessage = _context.t0.errors.email.message;
-              }
-
-              if (_context.t0.errors.email && _context.t0.errors.email.kind === 'unique') {
-                errorMessage = _context.t0.errors.email.message;
-              }
-
-              if (_context.t0.errors.email && _context.t0.errors.email.kind === 'required') {
-                errorMessage = _context.t0.errors.email.message;
-              }
-
-              if (_context.t0.errors.password) {
-                errorMessage = _context.t0.errors.password.message;
-              }
-
-              if (_context.t0.errors.username && _context.t0.errors.username.kind === 'unique') {
-                errorMessage = _context.t0.errors.username.message;
-              }
-
-              if (_context.t0.errors.username && _context.t0.errors.username.kind === 'required') {
-                errorMessage = _context.t0.errors.username.message;
-              }
-
+              errorMessage = (0, _validator.userRegistrationValidator)(_context.t0);
               util.setError(400, errorMessage);
               return _context.abrupt("return", util.send(res));
 
-            case 20:
+            case 14:
             case "end":
               return _context.stop();
           }
@@ -142,6 +119,57 @@ function () {
           }
         }
       });
+    }
+  }, {
+    key: "createUserProfile",
+    value: function createUserProfile(req, res) {
+      var profileInfo, user, acceptedEditOptions, receivedOptions, isUpdateOption, errorMessage;
+      return _regenerator["default"].async(function createUserProfile$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              profileInfo = req.body;
+              user = req.user;
+              acceptedEditOptions = ['firstName', 'lastName', 'dob', 'gender', 'phoneNumber', 'address'];
+              receivedOptions = Object.keys(profileInfo);
+              isUpdateOption = receivedOptions.every(function (option) {
+                return acceptedEditOptions.includes(option);
+              });
+
+              if (isUpdateOption) {
+                _context4.next = 8;
+                break;
+              }
+
+              util.setError(400, 'One of the fields is not a valid update field.');
+              return _context4.abrupt("return", util.send(res));
+
+            case 8:
+              _context4.prev = 8;
+              // eslint-disable-next-line no-return-assign
+              receivedOptions.forEach(function (option) {
+                return user[option] = profileInfo[option];
+              });
+              _context4.next = 12;
+              return _regenerator["default"].awrap(user.save());
+
+            case 12:
+              util.setSuccess(200, 'User profile updated successfully!', user);
+              return _context4.abrupt("return", util.send(res));
+
+            case 16:
+              _context4.prev = 16;
+              _context4.t0 = _context4["catch"](8);
+              errorMessage = (0, _validator.profileValidator)(_context4.t0);
+              util.setError(400, errorMessage);
+              return _context4.abrupt("return", util.send(res));
+
+            case 21:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, null, null, [[8, 16]]);
     }
   }]);
   return UserController;

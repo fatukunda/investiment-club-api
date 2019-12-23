@@ -2,6 +2,7 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import Util from '../../utils/utils';
 import userService from './userService';
+import { profileValidator, userRegistrationValidator } from '../../utils/validator';
 
 const util = new Util();
 
@@ -13,25 +14,7 @@ export default class UserController {
       util.setSuccess(201, 'User created!', createdUser);
       return util.send(res);
     } catch (error) {
-      let errorMessage = '';
-      if (error.errors.email) {
-        errorMessage = error.errors.email.message;
-      }
-      if (error.errors.email && error.errors.email.kind === 'unique') {
-        errorMessage = error.errors.email.message;
-      }
-      if (error.errors.email && error.errors.email.kind === 'required') {
-        errorMessage = error.errors.email.message;
-      }
-      if (error.errors.password) {
-        errorMessage = error.errors.password.message;
-      }
-      if (error.errors.username && error.errors.username.kind === 'unique') {
-        errorMessage = error.errors.username.message;
-      }
-      if (error.errors.username && error.errors.username.kind === 'required') {
-        errorMessage = error.errors.username.message;
-      }
+      const errorMessage = userRegistrationValidator(error);
       util.setError(400, errorMessage);
       return util.send(res);
     }
@@ -53,5 +36,28 @@ export default class UserController {
     const user = await req.user;
     util.setSuccess(200, 'User Profile', user);
     return util.send(res);
+  }
+
+  static async createUserProfile(req, res) {
+    const profileInfo = req.body;
+    const { user } = req;
+    const acceptedEditOptions = ['firstName', 'lastName', 'dob', 'gender', 'phoneNumber', 'address'];
+    const receivedOptions = Object.keys(profileInfo);
+    const isUpdateOption = receivedOptions.every((option) => acceptedEditOptions.includes(option));
+    if (!isUpdateOption) {
+      util.setError(400, 'One of the fields is not a valid update field.');
+      return util.send(res);
+    }
+    try {
+      // eslint-disable-next-line no-return-assign
+      receivedOptions.forEach((option) => (user[option] = profileInfo[option]));
+      await user.save();
+      util.setSuccess(200, 'User profile updated successfully!', user);
+      return util.send(res);
+    } catch (error) {
+      const errorMessage = profileValidator(error);
+      util.setError(400, errorMessage);
+      return util.send(res);
+    }
   }
 }

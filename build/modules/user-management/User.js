@@ -45,6 +45,47 @@ var userSchema = _mongoose["default"].Schema({
     required: [true, 'Password is required.'],
     minlength: [6, 'Password should have more than 6 characters.'],
     trim: true
+  },
+  firstName: {
+    type: String,
+    required: false,
+    trim: true,
+    validate: {
+      validator: _validator.isAlpha,
+      message: '{PATH} should contain only letters.',
+      isAsync: false
+    }
+  },
+  lastName: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: _validator.isAlpha,
+      message: '{PATH} should contain only letters.',
+      isAsync: false
+    }
+  },
+  dob: {
+    type: Date
+  },
+  phoneNumber: {
+    type: String,
+    validate: {
+      validator: _validator.isMobilePhone,
+      message: '{VALUE} is not a valid phone number.',
+      isAsync: false,
+      locale: 'en-UG',
+      options: {
+        strictMode: true
+      }
+    }
+  },
+  address: {
+    type: String
+  },
+  gender: {
+    type: String,
+    "enum": ['male', 'female']
   }
 });
 
@@ -157,6 +198,14 @@ userSchema.statics.findByCredentials = function _callee3(username, password) {
       }
     }
   });
+};
+
+userSchema.methods.toJSON = function () {
+  // Remove some sensitive properties from the user response
+  var user = this;
+  var userObject = user.toObject();
+  delete userObject.password;
+  return userObject;
 };
 
 var User = _mongoose["default"].model('User', userSchema);

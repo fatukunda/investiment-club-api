@@ -66,6 +66,55 @@ const user2 = {
   email: 'user2@app.com',
   password: 'testuser2!@',
 };
+
+export const userProfileData = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '02.17.2004',
+  address: 'Ntinda, Kampala',
+  gender: 'male',
+  phoneNumber: '+256716565142',
+};
+
+export const invalidProfileData = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '02.17.2004',
+  location: 'Ntinda, Kampala',
+  gender: 'male',
+  phoneNumber: '+256716565142',
+};
+
+export const invalidFirstName = {
+  firstName: 34542525,
+  lastName: 'Doe',
+};
+
+export const invalidLastName = {
+  firstName: 'John',
+  lastName: 456536356,
+};
+
+export const invalidDob = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: 'invalid',
+};
+
+export const invalidGender = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '4.4.2000',
+  gender: 'invalid',
+};
+
+export const invalidPhoneNumber = {
+  firstName: 'John',
+  lastName: 'Doe',
+  dob: '4.4.2000',
+  gender: 'male',
+  phoneNumber: '8978762565652652625',
+};
 // Function to create users for each test
 
 export const createUsers = async () => {
