@@ -36,6 +36,20 @@ class UserService {
       throw error;
     }
   }
+
+  // eslint-disable-next-line consistent-return
+  static async uploadAvatar(userId, avatarUrl) {
+    try {
+      const user = await User.findById(userId);
+      if (user) {
+        user.avatar = avatarUrl;
+        await user.save();
+        return user.avatar;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default UserService;

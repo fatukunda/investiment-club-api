@@ -1,8 +1,12 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-tabs */
 /* eslint-disable no-mixed-spaces-and-tabs */
 import Util from '../../utils/utils';
 import userService from './userService';
 import { profileValidator, userRegistrationValidator } from '../../utils/validator';
+import { dataUri } from '../../middleware/multer';
+import { uploader } from '../../config/cloudinary';
 
 const util = new Util();
 
@@ -58,6 +62,22 @@ export default class UserController {
       const errorMessage = profileValidator(error);
       util.setError(400, errorMessage);
       return util.send(res);
+    }
+  }
+
+  static async uploadAvatar(req, res) {
+    if (req.file) {
+      const file = dataUri(req).content;
+      try {
+        const result = await uploader.upload(file);
+        const avatarUrl = result.url;
+        const userAvatar = await userService.uploadAvatar(req.user._id, avatarUrl);
+        util.setSuccess(200, 'Profile picture uploaded successfully!', { avatar: userAvatar });
+        return util.send(res);
+      } catch (error) {
+        util.setError(400, error.message);
+        return util.send(res);
+      }
     }
   }
 }

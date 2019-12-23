@@ -116,6 +116,50 @@ function () {
           }
         }
       }, null, null, [[1, 13]]);
+    } // eslint-disable-next-line consistent-return
+
+  }, {
+    key: "uploadAvatar",
+    value: function uploadAvatar(userId, avatarUrl) {
+      var user;
+      return _regenerator["default"].async(function uploadAvatar$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              _context3.next = 3;
+              return _regenerator["default"].awrap(_User["default"].findById(userId));
+
+            case 3:
+              user = _context3.sent;
+
+              if (!user) {
+                _context3.next = 9;
+                break;
+              }
+
+              user.avatar = avatarUrl;
+              _context3.next = 8;
+              return _regenerator["default"].awrap(user.save());
+
+            case 8:
+              return _context3.abrupt("return", user.avatar);
+
+            case 9:
+              _context3.next = 14;
+              break;
+
+            case 11:
+              _context3.prev = 11;
+              _context3.t0 = _context3["catch"](0);
+              throw _context3.t0;
+
+            case 14:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, null, null, [[0, 11]]);
     }
   }]);
   return UserService;

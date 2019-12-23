@@ -73,6 +73,9 @@ const userSchema = mongoose.Schema({
     enum: ['male', 'female'],
   },
 
+  avatar: {
+    type: String,
+  },
 });
 
 userSchema.plugin(uniqueValidator, { message: 'A user with {PATH} {VALUE} already exists.' });

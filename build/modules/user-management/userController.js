@@ -19,6 +19,14 @@ var _userService = _interopRequireDefault(require("./userService"));
 
 var _validator = require("../../utils/validator");
 
+var _multer = require("../../middleware/multer");
+
+var _cloudinary = require("../../config/cloudinary");
+
+/* eslint-disable consistent-return */
+
+/* eslint-disable no-underscore-dangle */
+
 /* eslint-disable no-tabs */
 
 /* eslint-disable no-mixed-spaces-and-tabs */
@@ -170,6 +178,50 @@ function () {
           }
         }
       }, null, null, [[8, 16]]);
+    }
+  }, {
+    key: "uploadAvatar",
+    value: function uploadAvatar(req, res) {
+      var file, result, avatarUrl, userAvatar;
+      return _regenerator["default"].async(function uploadAvatar$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              if (!req.file) {
+                _context5.next = 18;
+                break;
+              }
+
+              file = (0, _multer.dataUri)(req).content;
+              _context5.prev = 2;
+              _context5.next = 5;
+              return _regenerator["default"].awrap(_cloudinary.uploader.upload(file));
+
+            case 5:
+              result = _context5.sent;
+              avatarUrl = result.url;
+              _context5.next = 9;
+              return _regenerator["default"].awrap(_userService["default"].uploadAvatar(req.user._id, avatarUrl));
+
+            case 9:
+              userAvatar = _context5.sent;
+              util.setSuccess(200, 'Profile picture uploaded successfully!', {
+                avatar: userAvatar
+              });
+              return _context5.abrupt("return", util.send(res));
+
+            case 14:
+              _context5.prev = 14;
+              _context5.t0 = _context5["catch"](2);
+              util.setError(400, _context5.t0.message);
+              return _context5.abrupt("return", util.send(res));
+
+            case 18:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, null, null, [[2, 14]]);
     }
   }]);
   return UserController;

@@ -86,6 +86,9 @@ var userSchema = _mongoose["default"].Schema({
   gender: {
     type: String,
     "enum": ['male', 'female']
+  },
+  avatar: {
+    type: String
   }
 });
 
